@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>【认证与授权】1、基本概念 - 黑米面包派のBlog</title>
+  
+    <meta name="keywords" content="oauth2,spring security">
+  
+  
+    <meta name="description" content="
+在互联网中我们一致都有提到或接触到关于认证和授权概念或名字，那到底什么是认证？什么是授权？他们两又有什么联系和区别呢？本系列将记录自己近一段时间学习和实践的过程，以便加深理解过程。
+
+我们先来一起认识两个单词authentication和 authorization，有没有发现什么特点，我第一次接触到的时候，我...">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-favicon@19.9.6/favicon.ico">
+  
+
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+          
+            黑米面包派
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2020/03/28/spring/security/security-cap01/">
+      【认证与授权】1、基本概念
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>2020-03-28</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          
+          <blockquote>
+<p>在互联网中我们一致都有提到或接触到关于认证和授权概念或名字，那到底什么是认证？什么是授权？他们两又有什么联系和区别呢？本系列将记录自己近一段时间学习和实践的过程，以便加深理解过程。</p>
+</blockquote>
+<p>我们先来一起认识两个单词<code>authentication</code>和 <code>authorization</code>，有没有发现什么特点，我第一次接触到的时候，我一直都分不清楚这两个单词的意思（其实就是英语差）。直到后续学习的过程中经常会碰到它们，我才理解了这两个词的意思，在接下来的文章中，你也可能会经常看见它们。</p>
+<h3 id="1-1-什么是认证"><a href="#1-1-什么是认证" class="headerlink" title="1.1 什么是认证"></a>1.1 什么是认证</h3><p>在互联网中，我们每天都会使用到各种各样的APP和网站，在使用过程中通常还会遇到需要注册登录的情况，输入你的用户名和密码才能正常使用，也就是说成为这个应用的合法身份才可以访问应用的资源，这个过程就是认证。当然认证的方式有很多，常见的账号密码登录，手机验证码登录，指纹登录，刷脸登录等等。</p>
+<a id="more"></a>
+
+<h3 id="1-2-什么是会话"><a href="#1-2-什么是会话" class="headerlink" title="1.2 什么是会话"></a>1.2 什么是会话</h3><p>当一个用于认证通过以后，为了避免用户的每次操作都进行认证，这个时候就需要保持一个用户认证状态的会话，常见的认证会话机制有很多，例如<code>session</code>认证，<code>token</code>认证等。</p>
+<p><em>基于session的认证方式</em></p>
+<p>用户认证成功后，在服务端生成用户相关的数据保存在当前会话<code>session</code>中，发给客户端的 <code>SesssionId</code>会存放到 <code>cookie</code> 中，这样用户客户端请求时带上 <code>SesssionId</code> 就可以验证服务器端是否存在 <code>session</code> 数 据，以此完成用户的合法校验，当用户退出系统或<code>session</code>过期销毁时,客户端的<code>SesssionId</code>也就无效了。</p>
+<img src="https://i.loli.net/2020/03/28/7sZWaPpxLBtOd4X.png" alt="Session.jpg"  />
+
+<p><em>基于token的认证方式</em></p>
+<p>用户认证成功后，服务端生成一个token发给客户端，客户端可以放到 cookie 或 localStorage等存储中，每次请求时带上 token，服务端收到token通过验证后即可确认用户身份。</p>
+<p><img src="https://i.loli.net/2020/03/28/Pfp978ATHeEWJZ5.png" alt="token.jpg"></p>
+<p>基于<code>session</code>的认证方式由<code>Servlet</code>规范定制，服务端要存储<code>session</code>信息需要占用内存资源，客户端需要支持<code>cookie</code>;</p>
+<p>基于<code>token</code>的方式则一般不需要服务端存储<code>token</code>，并且不限制客户端的存储方式。如今移动互联网时代 更多类型的客户端需要接入系统，系统多是采用前后端分离的架构进行实现，所以基于<code>token</code>的方式更适合。</p>
+<h3 id="1-3-什么是授权"><a href="#1-3-什么是授权" class="headerlink" title="1.3 什么是授权"></a>1.3 什么是授权</h3><p> 授权是用户认证通过根据用户的权限来控制用户访问资源的过程，拥有资源的访问权限则正常访问，没有 权限则拒绝访问。例如视频网站的VIP用户，可以查看到普通用户看不到的资源信息。</p>
+<h3 id="1-4-授权的数据模型"><a href="#1-4-授权的数据模型" class="headerlink" title="1.4 授权的数据模型"></a>1.4 授权的数据模型</h3><p>授权过程中，我们需要知道如何对用户访问的资源进行控制，需要了解一些简单的授权数据模型。</p>
+<p>授权可以非常简单的理解成谁（Who）对什么（What）进行怎么样（How）的操作。</p>
+<ul>
+<li>Who 即主体（Subject），一般指用户，也可以是应用程序</li>
+<li>What 即资源（Resource）,例如商品信息，订单信息，页面按钮或程序中的接口等信息。</li>
+<li>How 即权限（Permission），规定了用户或程序对资源操作的许可。例如普通用户只能查看订单，管理员可修改或删除订单，这是因为普通用户和管理员用户对订单资源的操作权限不一样。</li>
+</ul>
+<p>通常主体、资源、权限相关的数据模型通常会包含以下几个部分</p>
+<ul>
+<li>主体Subject（用户ID，账号，密码…）</li>
+<li>资源Resource(资源ID,资源名称，访问地址…)</li>
+<li>权限Permission(权限ID、权限标识、权限名称，对应的资源ID…)</li>
+<li>角色Role(角色ID，角色名称…)</li>
+</ul>
+<p><img src="https://i.loli.net/2020/03/29/AyGrDF8bq7aJvXs.png" alt="授权模型1.jpg"></p>
+<p>你会发现权限中包含了一个资源ID，多个权限可指向一个资源，我们是否可以直接在权限信息中把资源信息包含进来呢？当然，这也是很多企业开发中的做法，将权限和资源合并为 <em>权限(权限ID、权限标识、权限名称、资源名称、资源访问地址、…)</em></p>
+<p><img src="https://i.loli.net/2020/03/29/cUFefZXNo3Pa8CH.png" alt="授权模型2.jpg"></p>
+<h3 id="1-4-RBAC设计模型"><a href="#1-4-RBAC设计模型" class="headerlink" title="1.4 RBAC设计模型"></a>1.4 RBAC设计模型</h3><h4 id="1-4-1-基于角色的访问控制"><a href="#1-4-1-基于角色的访问控制" class="headerlink" title="1.4.1 基于角色的访问控制"></a>1.4.1 基于角色的访问控制</h4><p>RBAC基于角色的访问控制(Role-Based Access Control)是按角色进行授权。</p>
+<p>例如当用户角色为总经理时，他就可以查询公司的某员工的工资情况，用伪代码的方式我们可以这样表示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(Subject.hasRole(<span class="string">"总经理角色ID"</span>))&#123;</span><br><span class="line">   <span class="comment">// 查询员工工资</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在突然来了个需求，要求公司的部门经理也可以查看员工的工资情况，怎么做呢？再加一个判断就好了嘛</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(Subject.hasRole(<span class="string">"总经理角色ID"</span>) || Subject.hasRole(<span class="string">"部门经理角色ID"</span>))&#123;</span><br><span class="line">	 <span class="comment">// 查询员工工资</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时候我们发现了一个问题，当哪天修改角色的权限时，就需要修改授权相关的代码，系统可扩展性较差。</p>
+<h4 id="1-4-2-基于资源的访问控制"><a href="#1-4-2-基于资源的访问控制" class="headerlink" title="1.4.2 基于资源的访问控制"></a>1.4.2 基于资源的访问控制</h4><p>RBAC基于资源的访问控制(Resource-Based Access Control)是按资源(或权限)进行授权。</p>
+<p>同样是上面的需求，这时候我们的代码变成了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(Subject.hasPermission(<span class="string">"查询员工工资的权限标识"</span>))&#123;</span><br><span class="line">	<span class="comment">// 查询员工工资</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当哪天行政主管角色的用户需要查询员工的工资时，我们只需要为行政主管的角色添加一个查询员工工资的权限即可，不需要去修改授权相关的代码，系统的可扩展性增强了。</p>
+<p>（完）</p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://www.wujiwen.cn/2020/03/28/spring/security/security-cap01/>https://www.wujiwen.cn/2020/03/28/spring/security/security-cap01/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          
+<div class='new-meta-item author'>
+  <a href="https://www.wujiwen.cn" rel="nofollow">
+    <img src="https://i.loli.net/2020/08/05/Zt8rfjGBemORiXl.jpg">
+    <p>黑米面包派</p>
+  </a>
+</div>
+
+        
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-04-08T18:04:34+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>edited on：2020-04-08</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+
+        
+      
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2020/04/05/spring/security/security-cap02/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>【认证与授权】2、基于session的认证方式</p>
+                <p class='content'>这一篇将通过一个简单的web项目实现基于Session的认证授权方式，也是以往传统项目的做法。先来复习一下流程
+
+用户认证通过以后，在服务端生成用户相关的数据保存在当前会话（Session）中，...</p>
+              </a>
+            
+            
+              <a class='next' href='/2020/01/19/spring/basic/properties-use/'>
+                <p class='title'>Spring 中无处不在的 Properties<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>
+本文转载自 https://javadoop.com/post/spring-properties
+
+对 Spring 里面的 Properties 不理解的开发者可能会觉得有点乱，主要是因为...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+        <section id="comments">
+          <div id="gitalk-container"></div>
+        </section>
+      
+      
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '【认证与授权】1、基本概念',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-什么是认证"><span class="toc-text">1.1 什么是认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-什么是会话"><span class="toc-text">1.2 什么是会话</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-什么是授权"><span class="toc-text">1.3 什么是授权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-授权的数据模型"><span class="toc-text">1.4 授权的数据模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-RBAC设计模型"><span class="toc-text">1.4 RBAC设计模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-1-基于角色的访问控制"><span class="toc-text">1.4.1 基于角色的访问控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-2-基于资源的访问控制"><span class="toc-text">1.4.2 基于资源的访问控制</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+        </div>
+      
+    
+      
+        Use
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        as theme, total visits
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          times
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://www.wujiwn.cn" target="_blank" rel="noopener">Copyright © 2017-2020 黑米面包派</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/BBC19066-E176-47C2-9D22-48C81EE5DF6B.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: "0d5d854e4f76a3397c00",
+      clientSecret: "7e1995ab2c1c11c292f38a01e615c44763a7f5dd",
+      repo: "https://github.com/JiwenWu/gitalk_-comment",
+      owner: "JiwenWu",
+      admin: "",
+      
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+      
+      distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+    gitalk.render('gitalk-container');
+  </script>
+
+
+
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
